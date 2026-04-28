@@ -30,9 +30,9 @@ class OpenAIAdapter(BaseAdapter):
         self.client = OpenAI(api_key=api_key)
 
     def generate(self, image: Image.Image, prompt: str) -> str:
-        response = self.client.responses.create(
-            model=self.model_cfg["model"],
-            input=[
+        request_kwargs = {
+            "model": self.model_cfg["model"],
+            "input": [
                 {
                     "role": "user",
                     "content": [
@@ -41,8 +41,14 @@ class OpenAIAdapter(BaseAdapter):
                     ],
                 }
             ],
-            temperature=self.generation_cfg.get("temperature", 0.0),
-            max_output_tokens=self.generation_cfg.get("max_new_tokens", 64),
+            "temperature": self.generation_cfg.get("temperature", 0.0),
+            "max_output_tokens": self.generation_cfg.get("max_new_tokens", 64),
+        }
+        if self.model_cfg.get("reasoning_effort"):
+            request_kwargs["reasoning"] = {"effort": self.model_cfg["reasoning_effort"]}
+
+        response = self.client.responses.create(
+            **request_kwargs
         )
         return response.output_text.strip()
 
@@ -96,11 +102,11 @@ class AnthropicAdapter(BaseAdapter):
         self.client = anthropic.Anthropic(api_key=api_key)
 
     def generate(self, image: Image.Image, prompt: str) -> str:
-        response = self.client.messages.create(
-            model=self.model_cfg["model"],
-            max_tokens=self.model_cfg.get("max_tokens", self.generation_cfg.get("max_new_tokens", 64)),
-            temperature=self.generation_cfg.get("temperature", 0.0),
-            messages=[
+        request_kwargs = {
+            "model": self.model_cfg["model"],
+            "max_tokens": self.model_cfg.get("max_tokens", self.generation_cfg.get("max_new_tokens", 64)),
+            "temperature": self.generation_cfg.get("temperature", 0.0),
+            "messages": [
                 {
                     "role": "user",
                     "content": [
@@ -116,7 +122,14 @@ class AnthropicAdapter(BaseAdapter):
                     ],
                 }
             ],
-        )
+        }
+        if self.model_cfg.get("thinking_budget_tokens"):
+            request_kwargs["thinking"] = {
+                "type": "enabled",
+                "budget_tokens": self.model_cfg["thinking_budget_tokens"],
+            }
+
+        response = self.client.messages.create(**request_kwargs)
         chunks = []
         for block in response.content:
             text = getattr(block, "text", None)
@@ -142,6 +155,15 @@ class GeminiAdapter(BaseAdapter):
     def generate(self, image: Image.Image, prompt: str) -> str:
         from google.genai import types
 
+        generate_config = {
+            "temperature": self.generation_cfg.get("temperature", 0.0),
+            "max_output_tokens": self.generation_cfg.get("max_new_tokens", 64),
+        }
+        if "thinking_budget" in self.model_cfg:
+            generate_config["thinking_config"] = types.ThinkingConfig(
+                thinking_budget=self.model_cfg["thinking_budget"]
+            )
+
         response = self.client.models.generate_content(
             model=self.model_cfg["model"],
             contents=[
@@ -151,10 +173,7 @@ class GeminiAdapter(BaseAdapter):
                     mime_type="image/png",
                 ),
             ],
-            config=types.GenerateContentConfig(
-                temperature=self.generation_cfg.get("temperature", 0.0),
-                max_output_tokens=self.generation_cfg.get("max_new_tokens", 64),
-            ),
+            config=types.GenerateContentConfig(**generate_config),
         )
         return (response.text or "").strip()
 

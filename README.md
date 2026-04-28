@@ -18,6 +18,20 @@
 - `huggingface_local`：本地 `transformers` 多模态模型
 - `vllm_server`：通过 `vllm serve` 暴露的 OpenAI-compatible 服务
 
+## 推荐实验入口
+
+如果你的研究目标是比较 `thinking vs no thinking`，建议优先使用：
+
+- [configs/models.thinking.yaml](/Users/fangyiyang/Desktop/eval_mllms/configs/models.thinking.yaml)
+
+它只保留适合做这类对照实验的模型，并且已经按“同一模型家族下的 thinking / no-thinking”方式配好了。
+
+直接运行：
+
+```bash
+bash scripts/run_thinking_models.sh
+```
+
 ## 模型清单
 
 ### 闭源模型
@@ -45,6 +59,21 @@
 - `Qwen3-VL` 这里选的是官方 `8B` 和 `30B-A3B` 两档。
 - `DeepSeek` 这里接的是开源视觉模型 `DeepSeek-VL2` 系列。
 - 我没有把 DeepSeek 闭源 API 写进“闭源 MLLM”列表，因为我查到的官方 API 文档目前没有图像输入的正式文档；现阶段更稳妥的做法是把 DeepSeek 作为开源 VLM 来测。
+
+## Thinking 对照模型
+
+见 [configs/models.thinking.yaml](/Users/fangyiyang/Desktop/eval_mllms/configs/models.thinking.yaml)。
+
+- `Claude Sonnet 4`: `standard` vs `thinking`
+- `Gemini 2.5 Flash`: `thinking_budget=0` vs `thinking_budget=1024`
+- `Qwen3-VL-8B`: `Instruct` vs `Thinking`
+- `Qwen3-VL-30B-A3B`: `Instruct` vs `Thinking`
+
+说明：
+
+- 这套配置更适合回答“thinking 到底带来了什么变化”这个问题。
+- 其中 API 模型通过参数切换 thinking 模式，开源 Qwen3-VL 通过 `Instruct` 和 `Thinking` 两个模型版本形成对照。
+- 我暂时没有把 DeepSeek 和 LLaVA 放进这套 thinking 对照配置，因为我这里没有查到同样清晰、稳定的 no-thinking 对照入口。
 
 你只需要改配置，不需要改脚本。
 

@@ -1,0 +1,89 @@
+models:
+  - name: claude_sonnet_4_standard
+    provider: anthropic
+    source_type: closed_source
+    thinking_capable: true
+    comparison_group: claude_sonnet_4
+    thinking_mode: standard
+    model: claude-sonnet-4-0
+    api_key_env: ANTHROPIC_API_KEY
+    max_tokens: 256
+
+  - name: claude_sonnet_4_thinking
+    provider: anthropic
+    source_type: closed_source
+    thinking_capable: true
+    comparison_group: claude_sonnet_4
+    thinking_mode: thinking
+    model: claude-sonnet-4-0
+    api_key_env: ANTHROPIC_API_KEY
+    max_tokens: 256
+    thinking_budget_tokens: 1024
+
+  - name: gemini_25_flash_no_thinking
+    provider: gemini
+    source_type: closed_source
+    thinking_capable: true
+    comparison_group: gemini_25_flash
+    thinking_mode: no_thinking
+    model: gemini-2.5-flash
+    api_key_env: GEMINI_API_KEY
+    thinking_budget: 0
+
+  - name: gemini_25_flash_thinking
+    provider: gemini
+    source_type: closed_source
+    thinking_capable: true
+    comparison_group: gemini_25_flash
+    thinking_mode: thinking
+    model: gemini-2.5-flash
+    api_key_env: GEMINI_API_KEY
+    thinking_budget: 1024
+
+  - name: qwen3_vl_8b_instruct
+    provider: vllm_server
+    source_type: open_source
+    thinking_capable: true
+    comparison_group: qwen3_vl_8b
+    thinking_mode: no_thinking
+    model_family: qwen3_vl
+    model_size: 8b
+    model: Qwen/Qwen3-VL-8B-Instruct
+    base_url: http://127.0.0.1:8000/v1
+    api_key: EMPTY
+
+  - name: qwen3_vl_8b_thinking
+    provider: vllm_server
+    source_type: open_source
+    thinking_capable: true
+    comparison_group: qwen3_vl_8b
+    thinking_mode: thinking
+    model_family: qwen3_vl
+    model_size: 8b
+    model: Qwen/Qwen3-VL-8B-Thinking
+    base_url: http://127.0.0.1:8001/v1
+    api_key: EMPTY
+
+  - name: qwen3_vl_30b_a3b_instruct
+    provider: vllm_server
+    source_type: open_source
+    thinking_capable: true
+    comparison_group: qwen3_vl_30b_a3b
+    thinking_mode: no_thinking
+    model_family: qwen3_vl
+    model_size: 30b_a3b
+    model: Qwen/Qwen3-VL-30B-A3B-Instruct
+    base_url: http://127.0.0.1:8002/v1
+    api_key: EMPTY
+
+  - name: qwen3_vl_30b_a3b_thinking
+    provider: vllm_server
+    source_type: open_source
+    thinking_capable: true
+    comparison_group: qwen3_vl_30b_a3b
+    thinking_mode: thinking
+    model_family: qwen3_vl
+    model_size: 30b_a3b
+    model: Qwen/Qwen3-VL-30B-A3B-Thinking
+    base_url: http://127.0.0.1:8003/v1
+    api_key: EMPTY
