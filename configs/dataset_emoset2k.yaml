@@ -1,0 +1,29 @@
+dataset:
+  path: fuyyy74/EmoSet2k
+  name: null
+  split: test
+  image_column: image
+  question_column: null
+  label_column: label
+  label_names: []
+  prompt_template: |
+    You are an emotion recognition assistant.
+    Look at the image carefully and choose exactly one label from the candidate list below.
+
+    Candidate labels:
+    {label_space}
+
+    Return only the label text and nothing else.
+
+eval:
+  output_root: outputs
+  max_samples: 100
+  save_every: 10
+  generation:
+    max_new_tokens: 32
+    temperature: 0.0
+
+matching:
+  lowercase: true
+  strip_punctuation: true
+  aliases: {}

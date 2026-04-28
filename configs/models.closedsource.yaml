@@ -1,0 +1,19 @@
+models:
+  - name: gpt41_mini
+    provider: openai
+    source_type: closed_source
+    model: gpt-4.1-mini
+    api_key_env: OPENAI_API_KEY
+
+  - name: claude_sonnet_4
+    provider: anthropic
+    source_type: closed_source
+    model: claude-sonnet-4-0
+    api_key_env: ANTHROPIC_API_KEY
+    max_tokens: 128
+
+  - name: gemini_25_flash
+    provider: gemini
+    source_type: closed_source
+    model: gemini-2.5-flash
+    api_key_env: GEMINI_API_KEY
