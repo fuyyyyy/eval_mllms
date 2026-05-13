@@ -1,0 +1,72 @@
+reasoning_modes:
+  - name: no_cot
+    prompt_template: |
+      {base_prompt}
+
+      Do not reveal your reasoning.
+      Return exactly one line in the format:
+      <answer>LABEL</answer>
+    generation:
+      max_new_tokens: 32
+    parser:
+      answer_regexes:
+        - "(?is)<answer>\\s*(.*?)\\s*</answer>"
+    request_overrides:
+      openai_compatible:
+        extra_body:
+          chat_template_kwargs:
+            enable_thinking: false
+      vllm_server:
+        extra_body:
+          chat_template_kwargs:
+            enable_thinking: false
+
+  - name: cot
+    prompt_template: |
+      {base_prompt}
+
+      Think step by step about the visual evidence.
+      First provide a concise reasoning block:
+      <reasoning>...</reasoning>
+
+      Then provide the final answer:
+      <answer>LABEL</answer>
+    generation:
+      max_new_tokens: 256
+    parser:
+      answer_regexes:
+        - "(?is)<answer>\\s*(.*?)\\s*</answer>"
+        - "(?im)^final answer\\s*[:：]\\s*(.+)$"
+      reasoning_regexes:
+        - "(?is)<reasoning>\\s*(.*?)\\s*</reasoning>"
+
+  - name: latent_cot
+    prompt_template: |
+      {base_prompt}
+
+      Think carefully about the visual evidence before answering, but keep your reasoning hidden.
+      Return exactly one line in the format:
+      <answer>LABEL</answer>
+    generation:
+      max_new_tokens: 48
+    parser:
+      answer_regexes:
+        - "(?is)<answer>\\s*(.*?)\\s*</answer>"
+    request_overrides:
+      openai:
+        reasoning:
+          effort: medium
+      anthropic:
+        thinking:
+          type: enabled
+          budget_tokens: 1024
+      gemini:
+        thinking_budget: 1024
+      openai_compatible:
+        extra_body:
+          chat_template_kwargs:
+            enable_thinking: true
+      vllm_server:
+        extra_body:
+          chat_template_kwargs:
+            enable_thinking: true

@@ -1,0 +1,78 @@
+models:
+  - name: gpt41_mini
+    provider: openai
+    source_type: closed_source
+    model_family: gpt
+    model_size: 4_1_mini
+    model: gpt-4.1-mini
+    api_key_env: OPENAI_API_KEY
+
+  - name: gpt5_mini
+    provider: openai
+    source_type: closed_source
+    model_family: gpt
+    model_size: 5_mini
+    model: gpt-5-mini
+    api_key_env: OPENAI_API_KEY
+
+  - name: claude_sonnet_4
+    provider: anthropic
+    source_type: closed_source
+    model_family: claude
+    model_size: sonnet_4
+    model: claude-sonnet-4-0
+    api_key_env: ANTHROPIC_API_KEY
+    max_tokens: 128
+
+  - name: gemini_25_flash
+    provider: gemini
+    source_type: closed_source
+    model_family: gemini
+    model_size: 2_5_flash
+    model: gemini-2.5-flash
+    api_key_env: GEMINI_API_KEY
+
+  - name: qwen25_vl_7b_vllm
+    provider: vllm_server
+    source_type: open_source
+    model_family: qwen2_5_vl
+    model_size: 7b
+    model: Qwen/Qwen2.5-VL-7B-Instruct
+    base_url: http://127.0.0.1:8000/v1
+    api_key: EMPTY
+
+  - name: qwen3_vl_8b_vllm
+    provider: vllm_server
+    source_type: open_source
+    model_family: qwen3_vl
+    model_size: 8b
+    model: Qwen/Qwen3-VL-8B-Instruct
+    base_url: http://127.0.0.1:8001/v1
+    api_key: EMPTY
+
+  - name: llava_onevision_7b_vllm
+    provider: vllm_server
+    source_type: open_source
+    model_family: llava_onevision
+    model_size: 7b
+    model: llava-hf/llava-onevision-qwen2-7b-ov-hf
+    base_url: http://127.0.0.1:8002/v1
+    api_key: EMPTY
+
+  - name: internvl3_8b_vllm
+    provider: vllm_server
+    source_type: open_source
+    model_family: internvl3
+    model_size: 8b
+    model: OpenGVLab/InternVL3-8B-Instruct
+    base_url: http://127.0.0.1:8003/v1
+    api_key: EMPTY
+
+  - name: deepseek_vl2_tiny_vllm
+    provider: vllm_server
+    source_type: open_source
+    model_family: deepseek_vl2
+    model_size: tiny
+    model: deepseek-ai/deepseek-vl2-tiny
+    base_url: http://127.0.0.1:8004/v1
+    api_key: EMPTY
