@@ -14,11 +14,18 @@
 
 当前默认数据集是 `fuyyy74/EmoSet2k`，但结构上也支持一般图像分类和图文问答。
 
+像 `LoserLi/MultiTasks` 这种字段结构也已经支持：
+
+- `images`: 图片列表
+- `problem`: 问题文本
+- `answer`: 答案文本
+
 ## 你现在最适合直接用的配置
 
 - 推荐模型清单：[configs/models.recommended.yaml](/Users/fangyiyang/Documents/New%20project/eval_mllms/configs/models.recommended.yaml)
 - 推理模式配置：[configs/reasoning.default.yaml](/Users/fangyiyang/Documents/New%20project/eval_mllms/configs/reasoning.default.yaml)
 - 数据集配置：[configs/dataset_emoset2k.yaml](/Users/fangyiyang/Documents/New%20project/eval_mllms/configs/dataset_emoset2k.yaml)
+- `LoserLi/MultiTasks` 示例配置：[configs/dataset_multitasks.yaml](/Users/fangyiyang/Documents/New%20project/eval_mllms/configs/dataset_multitasks.yaml)
 
 推荐模型里已经包含：
 
@@ -100,6 +107,16 @@ python3 evaluate.py \
   --max-samples 20
 ```
 
+跑 `LoserLi/MultiTasks`：
+
+```bash
+python3 evaluate.py \
+  --config configs/dataset_multitasks.yaml \
+  --models configs/models.recommended.yaml \
+  --reasoning-config configs/reasoning.default.yaml \
+  --max-samples 20
+```
+
 ## 输出结构
 
 每个模型、每种模式都会单独落盘：
@@ -165,6 +182,7 @@ vllm serve Qwen/Qwen3-VL-8B-Instruct \
 - `dataset.path`：Hugging Face 数据集名
 - `dataset.split`：如 `test`
 - `dataset.image_column`：图像列
+- `dataset.image_index`：当图像列是列表时，取第几张图，默认 `0`
 - `dataset.question_column`：可选，VQA 类任务使用
 - `dataset.label_column`：标签列
 - `dataset.label_names`：可选，手工指定标签空间
@@ -190,5 +208,6 @@ vllm serve Qwen/Qwen3-VL-8B-Instruct \
 ## 注意事项
 
 - `vllm_server` 适合批量挂开源模型做统一评测。
+- 当数据集的图像列是 `images` 这种列表结构时，当前默认取第一张图；如果你的任务需要别的图，改 `image_index` 即可。
 - 大模型是否支持“隐藏思考”取决于具体模型和后端实现，不是所有模型都能严格等价实现 `latent_cot`。
 - 如果你想把“latent 思维链”定义得更严格，建议后续把支持原生 hidden reasoning 的模型单独列成一组分析。

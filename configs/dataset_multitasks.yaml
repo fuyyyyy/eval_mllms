@@ -1,0 +1,30 @@
+dataset:
+  path: LoserLi/MultiTasks
+  name: null
+  split: test
+  image_column: images
+  image_index: 0
+  question_column: problem
+  label_column: answer
+  label_names: []
+  prompt_template: |
+    You are a visual reasoning assistant.
+    Read the question carefully and answer it based on the image.
+
+    Question:
+    {question}
+
+    Return only the final answer text and nothing else.
+
+eval:
+  output_root: outputs
+  max_samples: 100
+  save_every: 10
+  generation:
+    max_new_tokens: 64
+    temperature: 0.0
+
+matching:
+  lowercase: true
+  strip_punctuation: true
+  aliases: {}
